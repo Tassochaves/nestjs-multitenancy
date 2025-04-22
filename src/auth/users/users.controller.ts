@@ -1,15 +1,15 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserPresenter } from './user.presenter';
+import { CreateCommonUserDto } from './dto/create-common-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async create(@Body() data: CreateUserDto) {
-    const user = await this.usersService.create(data);
+  async createCommonUser(@Body() data: CreateCommonUserDto) {
+    const user = await this.usersService.createCommonUser(data);
     return new UserPresenter(user);
   }
 }
