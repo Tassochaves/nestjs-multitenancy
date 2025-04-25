@@ -1,11 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PartnersService {
-  create(createPartnerDto: CreatePartnerDto) {
-    return 'This action adds a new partner';
+  constructor(private prismaService: PrismaService) {}
+
+  async create(createPartnerDto: CreatePartnerDto & { userId: number }) {
+    //modo transação p/ garantir consistencia
+    const partner = await this.prismaService.$transaction(async (prisma) => {
+      const partner = await prisma.partner.create({
+        data: { name: createPartnerDto.name },
+      });
+
+      await prisma.partnerUser.create({
+        data: {
+          userId: createPartnerDto.userId,
+          partnerId: partner.id,
+        },
+      });
+
+      return partner;
+    });
+
+    return partner;
   }
 
   findAll() {
