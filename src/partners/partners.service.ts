@@ -28,7 +28,7 @@ export class PartnersService {
   }
 
   findAll() {
-    return `This action returns all partners`;
+    return this.prismaService.partner.findMany();
   }
 
   findOne(id: number) {
