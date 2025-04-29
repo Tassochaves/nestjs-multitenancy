@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { TenantInterceptor } from 'src/tenant/tenant.interceptor';
 
+@UseInterceptors(TenantInterceptor)
 @UseGuards(AuthGuard)
 @Controller('events')
 export class EventsController {
